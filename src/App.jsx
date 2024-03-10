@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [enabled, setEnabled] = useState(false);
+  //Creo un estado, y lo inicializo con la posición x y, que le pasaré al return transform
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     console.log("efecto: ", { enabled });
@@ -11,11 +13,16 @@ function App() {
       //event representa el objeto del evento que se desencadenó al mover el mouse, y tiene info de las coordenadas X-Y
       const { clientX, clientY } = event;
       console.log("handleMove", { clientX, clientY });
+      //establezco que x e y tomen los valores de clientXY, que tienen las coordenadas del movimiento
+      setPosition({ x: clientX, y: clientY });
     };
 
-    //pointermove es el nombre del evento, el cual se activa cuanodo el mouse se mueve dentro del área del documento (window, la ventana)
-    //handleMove se ejecutará cada vez que ocurra este evento
-    window.addEventListener("pointermove", handleMove);
+    //sólo me suscribo al evento, si enabled es true:
+    if (enabled) {
+      //pointermove es el nombre del evento, el cual se activa cuanodo el mouse se mueve dentro del área del documento (window, la ventana)
+      //handleMove se ejecutará cada vez que ocurra este evento
+      window.addEventListener("pointermove", handleMove);
+    }
   }, [enabled]);
 
   return (
@@ -31,7 +38,7 @@ function App() {
           top: -20,
           width: 40,
           height: 40,
-          transform: "translate(0px, 0px)",
+          transform: `translate(${position.x}px, ${position.y}px)`,
         }}
       />
 
